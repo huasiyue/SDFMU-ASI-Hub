@@ -31,7 +31,7 @@ https://glogg.bonnefon.org/download.html
 3. 完成后 Finsh 即可
 ### 三、使用
 
-![glogg-1](images/glogg-1.png)
+![glogg-1](glogg-1.png)
 
 ### 四、适用场景
 

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ECharts Grid Generator</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.3.3/echarts.min.js"></script>
+    <style>
+        /* 使用 grid 布局，动态列数根据屏幕宽度调整 */
+        .charts-grid {
+            display: grid;
+            gap: 20px; /* 图表间距 */
+            width: 100%; /* 宽度 100% */
+            justify-items: center; /* 居中对齐 */
+        }
+
+        .chart-container {
+            width: 100%; /* 宽度 100% 会自适应父容器宽度 */
+            height: 25vw; /* 图表的高度基于视口宽度的 25% */
+            min-height: 200px; /* 图表的最小高度 */
+            min-width: 200px; /* 图表的最小宽度 */
+        }
+
+        /* 设置输入框和按钮的样式 */
+        input, button {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Generate ECharts Grid</h2>
+
+<!-- 输入框和按钮 -->
+<div>
+    <label for="m-input">Enter m (rows):</label>
+    <input type="number" id="m-input" min="1" placeholder="Number of rows">
+    <label for="n-input">Enter n (columns):</label>
+    <input type="number" id="n-input" min="1" placeholder="Number of columns">
+    <button onclick="generateCharts()">Generate Charts</button>
+</div>
+
+<!-- 图表容器 -->
+<div id="charts-container" class="charts-grid"></div>
+
+<script>
+    // 生成图表的函数
+    function generateCharts() {
+        // 获取 m 和 n 的输入值并转换为整数
+        const m = parseInt(document.getElementById("m-input").value, 10);
+        const n = parseInt(document.getElementById("n-input").value, 10);
+
+        // 检查 m 和 n 是否有效
+        if (isNaN(m) || isNaN(n) || m <= 0 || n <= 0) {
+            alert("Please enter valid numbers for m and n.");
+            return;
+        }
+
+        const container = document.getElementById("charts-container");
+
+        // 清空之前的图表
+        container.innerHTML = "";
+
+        // 设置 grid 布局的列数（根据屏幕宽度调整）
+        container.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
+
+        // 根据 m 和 n 创建图表
+        for (let i = 0; i < m; i++) {
+            for (let j = 0; j < n; j++) {
+                // 创建图表容器
+                const chartDiv = document.createElement("div");
+                chartDiv.className = "chart-container";
+                chartDiv.id = `chart-${i}-${j}`;
+                container.appendChild(chartDiv);
+
+                // 设置 ECharts 配置项
+                const chart = echarts.init(chartDiv);
+                const option = {
+                    title: {
+                        text: `Chart ${i + 1}-${j + 1}`
+                    },
+                    tooltip: {},
+                    xAxis: {
+                        type: 'category',
+                        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [{
+                        data: [120, 200, 150, 80, 70, 110, 130],
+                        type: 'line'
+                    }]
+                };
+
+                // 设置图表选项
+                chart.setOption(option);
+            }
+        }
+    }
+
+    // 处理窗口大小变化的函数
+    function getWindowInfo() {
+        // 每次窗口调整大小时重新生成图表
+        generateCharts();
+    }
+
+    // 绑定 resize 事件
+    window.addEventListener('resize', getWindowInfo);
+
+    // // 页面加载时也生成图表
+    // window.onload = function() {
+    //     generateCharts();
+    // };
+</script>
+
+</body>
+</html>
